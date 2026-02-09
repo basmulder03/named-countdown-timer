@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Named Countdown Timer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⏰ Named Countdown Timer</h1>
+            <p class="subtitle">Create and share countdown timers with millisecond precision</p>
+        </header>
+
+        <div class="timer-display" id="timerDisplay">
+            <div class="timer-name" id="timerName">Set a timer to begin</div>
+            <div class="countdown-wrapper">
+                <div class="countdown" id="countdown">
+                    <span class="time-unit"><span class="value" id="days">00</span><span class="label">Days</span></span>
+                    <span class="separator">:</span>
+                    <span class="time-unit"><span class="value" id="hours">00</span><span class="label">Hours</span></span>
+                    <span class="separator">:</span>
+                    <span class="time-unit"><span class="value" id="minutes">00</span><span class="label">Minutes</span></span>
+                    <span class="separator">:</span>
+                    <span class="time-unit"><span class="value" id="seconds">00</span><span class="label">Seconds</span></span>
+                    <span class="separator">.</span>
+                    <span class="time-unit milliseconds"><span class="value" id="milliseconds">000</span><span class="label">MS</span></span>
+                </div>
+            </div>
+            <div class="timer-status" id="timerStatus"></div>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="timerNameInput">Timer Name</label>
+                <input type="text" id="timerNameInput" placeholder="e.g., New Year 2027" maxlength="50">
+            </div>
+            <div class="input-group">
+                <label for="targetDateTime">Target Date & Time</label>
+                <input type="datetime-local" id="targetDateTime">
+            </div>
+            <button id="startButton" class="btn btn-primary">Start Timer</button>
+            <button id="resetButton" class="btn btn-secondary">Reset</button>
+        </div>
+
+        <div class="share-section" id="shareSection" style="display: none;">
+            <h2>📤 Share Your Timer</h2>
+            <div class="share-url">
+                <input type="text" id="shareUrl" readonly>
+                <button id="copyUrlButton" class="btn btn-small">Copy</button>
+            </div>
+            <div class="share-options">
+                <button id="generateTinyUrlButton" class="btn btn-secondary">
+                    <span class="icon">🔗</span> Generate Short URL
+                </button>
+                <button id="generateQrCodeButton" class="btn btn-secondary">
+                    <span class="icon">📱</span> Generate QR Code
+                </button>
+            </div>
+            <div id="tinyUrlSection" style="display: none;">
+                <div class="share-url">
+                    <input type="text" id="tinyUrl" readonly>
+                    <button id="copyTinyUrlButton" class="btn btn-small">Copy</button>
+                </div>
+            </div>
+            <div id="qrCodeSection" style="display: none;">
+                <img id="qrCodeImage" alt="QR Code" />
+                <button id="downloadQrButton" class="btn btn-secondary">Download QR Code</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Created with ❤️ | Share timers via URL parameters</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
