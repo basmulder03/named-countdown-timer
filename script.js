@@ -208,12 +208,9 @@ function handleReset() {
     elements.qrCodeSection.style.display = 'none';
     elements.toggleViewModeButton.style.display = 'none';
     
-    // Ensure controls and share section are visible
+    // Ensure controls are visible after reset
     if (elements.controls) {
         elements.controls.style.display = 'block';
-    }
-    if (elements.shareSection) {
-        elements.shareSection.style.display = 'none';
     }
     
     // Reset toggle button state
