@@ -49,7 +49,10 @@ View-only mode provides a clean, distraction-free countdown display perfect for 
 - Shows only the countdown timer and timer name
 - Ideal for displaying on screens, in presentations, or sharing with viewers who shouldn't modify the timer
 
-To enable view-only mode, add `&viewOnly=true` to the URL or use the "View-Only URL" from the share section.
+**How to enable view-only mode:**
+1. **Toggle Button** - Click the "👁️ View Only" button in the header (appears after starting a timer) to instantly switch modes. Click "✏️ Edit Mode" to return to normal mode.
+2. **URL Parameter** - Add `&viewOnly=true` to the URL
+3. **Share Section** - Use the "View-Only URL" from the share section
 
 ### URL Parameters
 
