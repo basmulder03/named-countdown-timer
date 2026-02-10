@@ -10,6 +10,8 @@ A beautifully designed countdown timer with millisecond precision that can be sh
 
 🔗 **URL Sharing** - Automatically start timers from URL parameters
 
+👁️ **View-Only Mode** - Hide all editing controls for clean, distraction-free display
+
 📱 **QR Code Generation** - Generate QR codes for easy mobile sharing
 
 🔗 **Short URLs** - Generate TinyURL short links for easy sharing
@@ -34,8 +36,20 @@ Visit the live application: [Named Countdown Timer](https://basmulder03.github.i
 Once a timer is started, you can share it in multiple ways:
 
 1. **Copy URL** - Click "Copy" to copy the full URL with parameters
-2. **Generate Short URL** - Click "Generate Short URL" to create a TinyURL
-3. **Generate QR Code** - Click "Generate QR Code" to create a scannable QR code
+2. **Copy View-Only URL** - Click "Copy" next to the view-only URL to share a clean, display-only version
+3. **Generate Short URL** - Click "Generate Short URL" to create a TinyURL
+4. **Generate QR Code** - Click "Generate QR Code" to create a scannable QR code
+
+### View-Only Mode
+
+View-only mode provides a clean, distraction-free countdown display perfect for public displays, presentations, or embedding:
+
+- Hides all editing controls (timer name input, date/time picker, buttons)
+- Hides the share section
+- Shows only the countdown timer and timer name
+- Ideal for displaying on screens, in presentations, or sharing with viewers who shouldn't modify the timer
+
+To enable view-only mode, add `&viewOnly=true` to the URL or use the "View-Only URL" from the share section.
 
 ### URL Parameters
 
@@ -43,10 +57,16 @@ The timer automatically starts when accessed with the following URL parameters:
 
 - `name` - The name of the timer (URL encoded)
 - `target` - The target timestamp in milliseconds
+- `viewOnly` - Set to `true` to enable view-only mode (hides all editing controls)
 
 Example:
 ```
 https://basmulder03.github.io/named-countdown-timer/?name=New%20Year%202027&target=1798761600000
+```
+
+Example (View-Only Mode):
+```
+https://basmulder03.github.io/named-countdown-timer/?name=New%20Year%202027&target=1798761600000&viewOnly=true
 ```
 
 ## Technology Stack
