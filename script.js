@@ -1,6 +1,7 @@
 // Timer state
 let timerInterval = null;
 let targetDate = null;
+let isViewOnlyMode = false;
 
 // DOM Elements
 const elements = {
@@ -17,7 +18,9 @@ const elements = {
     timerStatus: document.getElementById('timerStatus'),
     shareSection: document.getElementById('shareSection'),
     shareUrl: document.getElementById('shareUrl'),
+    viewOnlyUrl: document.getElementById('viewOnlyUrl'),
     copyUrlButton: document.getElementById('copyUrlButton'),
+    copyViewOnlyUrlButton: document.getElementById('copyViewOnlyUrlButton'),
     generateTinyUrlButton: document.getElementById('generateTinyUrlButton'),
     generateQrCodeButton: document.getElementById('generateQrCodeButton'),
     tinyUrlSection: document.getElementById('tinyUrlSection'),
@@ -25,7 +28,11 @@ const elements = {
     copyTinyUrlButton: document.getElementById('copyTinyUrlButton'),
     qrCodeSection: document.getElementById('qrCodeSection'),
     qrCodeImage: document.getElementById('qrCodeImage'),
-    downloadQrButton: document.getElementById('downloadQrButton')
+    downloadQrButton: document.getElementById('downloadQrButton'),
+    controls: document.querySelector('.controls'),
+    toggleViewModeButton: document.getElementById('toggleViewModeButton'),
+    toggleViewModeIcon: document.getElementById('toggleViewModeIcon'),
+    toggleViewModeText: document.getElementById('toggleViewModeText')
 };
 
 // Initialize on page load
@@ -52,6 +59,13 @@ function initializeFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get('name');
     const target = urlParams.get('target');
+    const viewOnly = urlParams.get('viewOnly');
+
+    // Check if view-only mode is enabled
+    if (viewOnly === 'true') {
+        isViewOnlyMode = true;
+        enableViewOnlyMode();
+    }
 
     if (name && target) {
         try {
@@ -71,6 +85,11 @@ function initializeFromUrl() {
             
             // Start the timer automatically
             startTimer();
+            
+            // Show toggle button when timer is loaded from URL (unless in view-only mode from URL)
+            if (!isViewOnlyMode) {
+                elements.toggleViewModeButton.style.display = 'flex';
+            }
         } catch (error) {
             console.error('Error parsing URL parameters:', error);
             elements.timerStatus.textContent = 'Invalid URL parameters';
@@ -84,10 +103,12 @@ function setupEventListeners() {
     elements.startButton.addEventListener('click', handleStartTimer);
     elements.resetButton.addEventListener('click', handleReset);
     elements.copyUrlButton.addEventListener('click', () => copyToClipboard(elements.shareUrl.value));
+    elements.copyViewOnlyUrlButton.addEventListener('click', () => copyToClipboard(elements.viewOnlyUrl.value));
     elements.copyTinyUrlButton.addEventListener('click', () => copyToClipboard(elements.tinyUrl.value));
     elements.generateTinyUrlButton.addEventListener('click', generateTinyUrl);
     elements.generateQrCodeButton.addEventListener('click', generateQrCode);
     elements.downloadQrButton.addEventListener('click', downloadQrCode);
+    elements.toggleViewModeButton.addEventListener('click', toggleViewMode);
 }
 
 // Handle start timer button click
@@ -115,6 +136,9 @@ function handleStartTimer() {
     elements.timerName.textContent = name;
     startTimer();
     generateShareUrl();
+    
+    // Show the toggle button once timer is started
+    elements.toggleViewModeButton.style.display = 'flex';
 }
 
 // Start the countdown timer
@@ -168,6 +192,7 @@ function handleReset() {
     }
 
     targetDate = null;
+    isViewOnlyMode = false;
     elements.timerName.textContent = 'Set a timer to begin';
     elements.timerNameInput.value = '';
     elements.targetDateTime.value = '';
@@ -181,6 +206,17 @@ function handleReset() {
     elements.shareSection.style.display = 'none';
     elements.tinyUrlSection.style.display = 'none';
     elements.qrCodeSection.style.display = 'none';
+    elements.toggleViewModeButton.style.display = 'none';
+    
+    // Ensure controls are visible after reset
+    if (elements.controls) {
+        elements.controls.style.display = 'block';
+    }
+    
+    // Reset toggle button state
+    elements.toggleViewModeButton.classList.remove('active');
+    elements.toggleViewModeIcon.textContent = '👁️';
+    elements.toggleViewModeText.textContent = 'View Only';
     
     // Clear URL parameters
     window.history.replaceState({}, document.title, window.location.pathname);
@@ -192,8 +228,10 @@ function generateShareUrl() {
     const target = targetDate.getTime();
     const baseUrl = window.location.origin + window.location.pathname;
     const shareableUrl = `${baseUrl}?name=${name}&target=${target}`;
+    const viewOnlyUrl = `${baseUrl}?name=${name}&target=${target}&viewOnly=true`;
     
     elements.shareUrl.value = shareableUrl;
+    elements.viewOnlyUrl.value = viewOnlyUrl;
     elements.shareSection.style.display = 'block';
     elements.tinyUrlSection.style.display = 'none';
     elements.qrCodeSection.style.display = 'none';
@@ -304,4 +342,65 @@ function showTemporaryMessage(message, isError = false) {
             elements.timerStatus.textContent = '';
         }
     }, 3000);
+}
+
+// Enable view-only mode
+function enableViewOnlyMode() {
+    // Hide controls section (input fields and buttons)
+    if (elements.controls) {
+        elements.controls.style.display = 'none';
+    }
+    
+    // Hide share section
+    if (elements.shareSection) {
+        elements.shareSection.style.display = 'none';
+    }
+}
+
+// Disable view-only mode
+function disableViewOnlyMode() {
+    // Show controls section
+    if (elements.controls) {
+        elements.controls.style.display = 'block';
+    }
+    
+    // Show share section if timer is running
+    if (targetDate && elements.shareUrl.value) {
+        elements.shareSection.style.display = 'block';
+    }
+}
+
+// Toggle view mode
+function toggleViewMode() {
+    isViewOnlyMode = !isViewOnlyMode;
+    
+    if (isViewOnlyMode) {
+        enableViewOnlyMode();
+        elements.toggleViewModeButton.classList.add('active');
+        elements.toggleViewModeIcon.textContent = '✏️';
+        elements.toggleViewModeText.textContent = 'Edit Mode';
+        
+        // Update URL to include viewOnly parameter
+        if (targetDate) {
+            const name = encodeURIComponent(elements.timerNameInput.value.trim());
+            const target = targetDate.getTime();
+            const baseUrl = window.location.origin + window.location.pathname;
+            const viewOnlyUrl = `${baseUrl}?name=${name}&target=${target}&viewOnly=true`;
+            window.history.replaceState({}, '', viewOnlyUrl);
+        }
+    } else {
+        disableViewOnlyMode();
+        elements.toggleViewModeButton.classList.remove('active');
+        elements.toggleViewModeIcon.textContent = '👁️';
+        elements.toggleViewModeText.textContent = 'View Only';
+        
+        // Update URL to remove viewOnly parameter
+        if (targetDate) {
+            const name = encodeURIComponent(elements.timerNameInput.value.trim());
+            const target = targetDate.getTime();
+            const baseUrl = window.location.origin + window.location.pathname;
+            const normalUrl = `${baseUrl}?name=${name}&target=${target}`;
+            window.history.replaceState({}, '', normalUrl);
+        }
+    }
 }
