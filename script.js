@@ -165,6 +165,7 @@ function updateCountdown() {
         elements.milliseconds.textContent = '000';
         elements.timerStatus.textContent = '🎉 Time\'s up!';
         elements.timerStatus.classList.add('expired');
+        showCrackEffect();
         return;
     }
 
@@ -184,13 +185,33 @@ function updateCountdown() {
     elements.milliseconds.textContent = String(milliseconds).padStart(3, '0');
 }
 
+// Show crack effect
+function showCrackEffect() {
+    const crackOverlay = document.getElementById('crackOverlay');
+    if (crackOverlay && !crackOverlay.classList.contains('active')) {
+        crackOverlay.classList.add('active');
+    }
+}
+
+// Hide crack effect
+function hideCrackEffect() {
+    const crackOverlay = document.getElementById('crackOverlay');
+    if (crackOverlay) {
+        crackOverlay.classList.remove('active');
+    }
+}
+
 // Handle reset
 function handleReset() {
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
     }
+    
+    // Hide crack effect when resetting
+    hideCrackEffect();}
 
+    
     targetDate = null;
     isViewOnlyMode = false;
     elements.timerName.textContent = 'Set a timer to begin';
